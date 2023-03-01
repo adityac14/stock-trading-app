@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
 import finnHub from "../apis/finnHub";
+import {BsFillCaretDownFill} from "react-icons/bs"
+import {BsFillCaretUpFill} from "react-icons/bs"
 
 export const StockList = () => {
   const [stock, setStock] = useState([]);
@@ -9,6 +11,14 @@ export const StockList = () => {
     "MSFT",
     "AMZN",
   ]);
+
+  const changeColor = (change) => {
+    return change > 0 ? "success" : "danger"
+  }
+
+  const renderIcon = (change) => {
+    return change > 0 ? <BsFillCaretUpFill/> : <BsFillCaretDownFill/>
+  }
 
   useEffect(() => {
     let isMounted = true;
@@ -49,6 +59,7 @@ export const StockList = () => {
           <tr>
             <th scope="col">Name</th>
             <th scope="col">Last</th>
+            <th scope="col">Chg</th>
             <th scope="col">Chg%</th>
             <th scope="col">High</th>
             <th scope="col">Low</th>
@@ -62,7 +73,8 @@ export const StockList = () => {
               <tr className="table-row" key={stockData.symbol}>
                 <th scope="row">{stockData.symbol}</th>
                 <td>{stockData.data.c}</td>
-                <td>{stockData.data.d}</td>
+                <td className={`text-${changeColor(stockData.data.d)}`}>{stockData.data.d}{renderIcon(stockData.data.d)}</td>                
+                <td className={`text-${changeColor(stockData.data.dp)}`}>{stockData.data.dp}{renderIcon(stockData.data.dp)}</td>                 
                 <td>{stockData.data.h}</td>
                 <td>{stockData.data.l}</td>
                 <td>{stockData.data.o}</td>
@@ -75,3 +87,5 @@ export const StockList = () => {
     </div>
   );
 };
+
+
