@@ -10,7 +10,8 @@ function App() {
         <Routes>
           <Route path="/" element={<StockOverviewPage />} />
 
-          <Route path="/detail/:stock_symbol" element={<StockDetailPage />} />
+          {/*symbol = Stock Symbol */}
+          <Route path="/detail/:symbol" element={<StockDetailPage />} />
         </Routes>
       </BrowserRouter>
     </main>
