@@ -1,11 +1,20 @@
-import logo from './logo.svg';
-import './App.css';
+import "./App.css";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { StockOverviewPage } from "./pages/StockOverviewPage";
+import { StockDetailPage } from "./pages/StockDetailPage";
 
 function App() {
   return (
-    <h2 className='mt-5'>Hello</h2>
-  
-  )
+    <main className="container">
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<StockOverviewPage />} />
+
+          <Route path="/detail/:stock_symbol" element={<StockDetailPage />} />
+        </Routes>
+      </BrowserRouter>
+    </main>
+  );
 }
 
 export default App;
