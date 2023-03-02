@@ -1,28 +1,41 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import finnHub from "../apis/finnHub";
+import { WatchListContext } from "../context/WatchListContext";
 
 export const AutoComplete = () => {
   const [search, setSearch] = useState("");
   const [results, setResults] = useState("");
+  const { addStock } = useContext(WatchListContext);
 
   const renderDropdown = () => {
-    const dropDownClass = search ? "show" : null
-    console.log(Array.isArray(results))
+    const dropDownClass = search ? "show" : null;
     return (
-      <ul style={{
-        height: "500px",
-        overflowY: "scroll",
-        overflowX: "hidden",
-        cursor: "pointer"
-      }} className={`dropdown-menu ${dropDownClass}`}>
+      <ul
+        style={{
+          height: "500px",
+          overflowY: "scroll",
+          overflowX: "hidden",
+          cursor: "pointer",
+        }}
+        className={`dropdown-menu ${dropDownClass}`}
+      >
         {results.map((result) => {
           return (
-            <li key={result.symbol} className="dropdown-item">{result.description} ({result.symbol})</li>
-          )
+            <li
+              onClick={() => {
+                addStock(result.symbol);
+                setSearch("");
+              }}
+              key={result.symbol}
+              className="dropdown-item"
+            >
+              {result.description} ({result.symbol})
+            </li>
+          );
         })}
       </ul>
-    )
-  }
+    );
+  };
 
   useEffect(() => {
     let isMounted = true;
