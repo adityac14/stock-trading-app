@@ -1,7 +1,52 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import finnHub from "../apis/finnHub";
 
 export const AutoComplete = () => {
-  const [search, setSearch] = useState();
+  const [search, setSearch] = useState("");
+  const [results, setResults] = useState("");
+
+  const renderDropdown = () => {
+    const dropDownClass = search ? "show" : null
+    console.log(Array.isArray(results))
+    return (
+      <ul style={{
+        height: "500px",
+        overflowY: "scroll",
+        overflowX: "hidden",
+        cursor: "pointer"
+      }} className={`dropdown-menu ${dropDownClass}`}>
+        {results.map((result) => {
+          return (
+            <li key={result.symbol} className="dropdown-item">{result.description} ({result.symbol})</li>
+          )
+        })}
+      </ul>
+    )
+  }
+
+  useEffect(() => {
+    let isMounted = true;
+    const fetchData = async () => {
+      try {
+        const response = await finnHub.get("/search", {
+          params: {
+            q: search,
+          },
+        });
+
+        if (isMounted) {
+          setResults(response.data.result);
+        }
+      } catch (err) {}
+    };
+    if (search.length > 0) {
+      fetchData();
+    } else {
+      setResults([]);
+    }
+    return () => (isMounted = false);
+  }, [search]);
+  // useEffect hook will only return when the search changes
 
   return (
     <div className="w-50 p-5 rounded mx-auto">
@@ -14,15 +59,11 @@ export const AutoComplete = () => {
           placeholder="Search"
           autoComplete="off"
           value={search}
-          onChange={(e) => setSearch(e.target.value)}>
-        </input>
+          onChange={(e) => setSearch(e.target.value)}
+        ></input>
 
         <label htmlFor="search">Search</label>
-        <ul className="dropdown-menu">
-          <li>Stock 1</li>
-          <li>Stock 2</li>
-          <li>Stock 3</li>
-        </ul>
+        {Array.isArray(results) ? renderDropdown() : null}
       </div>
     </div>
   );
