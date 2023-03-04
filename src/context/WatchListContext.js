@@ -18,7 +18,7 @@ export const WatchListContextProvider = (props) => {
   
   const deleteStock = (stock) => {
     setStockWatchList(stockWatchList.filter((element) => {
-        return element !== stockWatchList
+        return element !== stock
     }))
   }
 
