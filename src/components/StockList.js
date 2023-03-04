@@ -49,7 +49,7 @@ export const StockList = () => {
   }, [stockWatchList]);
 
   const handleStockSelect = (symbol) => {
-    navigate(`details/${symbol}`)
+    navigate(`detail/${symbol}`)
 
   }
 
@@ -71,7 +71,7 @@ export const StockList = () => {
         <tbody>
           {stock.map((stockData) => {
             return (
-              <tr onClick={() => handleStockSelect(stockData.symbol)} className="table-row" key={stockData.symbol}>
+              <tr style={{cursor: "pointer"}} onClick={() => handleStockSelect(stockData.symbol)} className="table-row" key={stockData.symbol}>
                 <th scope="row">{stockData.symbol}</th>
                 <td>{stockData.data.c}</td>
                 <td className={`text-${changeColor(stockData.data.d)}`}>{stockData.data.d}{renderIcon(stockData.data.d)}</td>                
