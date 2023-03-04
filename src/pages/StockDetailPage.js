@@ -20,19 +20,19 @@ export const StockDetailPage = () => {
   useEffect(() => {
     const fetchData = async () => {
       const date = new Date();
-      const currentTimeSeconds = Math.floor(date.getTime() / 1000);
+      const currentTimeSeconds = Math.floor(date.getTime() / 1000)
       let oneDayAgo;
 
       if (date.getDate() === 6) {
-        oneDayAgo = currentTimeSeconds - (2 * 60 * 60 * 24);
+        oneDayAgo = currentTimeSeconds - 2 * 24 * 60 * 60;
       } else if (date.getDate() === 0) {
-        oneDayAgo = currentTimeSeconds - (3 * 60 * 60 * 24);
+        oneDayAgo = currentTimeSeconds - 3 * 24 * 60 * 60;
       } else {
-        oneDayAgo = currentTimeSeconds - (60 * 60 * 24);
+        oneDayAgo = currentTimeSeconds - 24 * 60 * 60;
       }
 
-      const oneWeekAgo = currentTimeSeconds - 60 * 60 * 24 * 7;
-      const oneYearAgo = currentTimeSeconds - 60 * 60 * 24 * 365;
+      const oneWeekAgo = currentTimeSeconds - 7 * 24 * 60 * 60
+      const oneYearAgo = currentTimeSeconds - 365 * 24 * 60 * 60
 
       try {
         const responses = await Promise.all([
