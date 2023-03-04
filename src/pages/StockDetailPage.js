@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import finnHub from "../apis/finnHub";
+import { StockChart } from "../components/StockChart";
 
 const formatData = (data) => {
   return data.t.map((element, index) => {
@@ -74,7 +75,15 @@ export const StockDetailPage = () => {
     fetchData();
   }, [symbol]);
 
-  return <div>Stock Detail Page {symbol}</div>;
+  // chartData && = if chartData is not null then render out this data
+  // if it is null it will render nothing, basically an if statement
+  return <div>{chartData && (
+    <div>
+        <StockChart chartData={chartData} symbol={symbol}/>
+        
+    </div>
+  )}
+  </div>
 };
 
 // const chartData = {
