@@ -5,7 +5,24 @@ export const StockChart = ({ chartData, symbol }) => {
   const { day, week, year } = chartData;
   const [dateFormat, setDateFormat] = useState("24h");
 
+  const determineTimeFormat = () => {
+    switch (dateFormat) {
+      case "24h":
+        return day;
+      case "7d":
+        return week;
+      case "1y":
+        return year;
+
+      default:
+        return day;
+    }
+  };
+
+  const colour = determineTimeFormat()[determineTimeFormat().length - 1].y - determineTimeFormat()[0].y > 0? "#26C281" : "#ED3419"
+
   const options = {
+    colors: [colour],
     title: {
       text: symbol,
       align: "center",
@@ -33,19 +50,7 @@ export const StockChart = ({ chartData, symbol }) => {
     },
   };
 
-  const determineTimeFormat = () => {
-    switch (dateFormat) {
-      case "24h":
-        return day;
-      case "7d":
-        return week;
-      case "1y":
-        return year;
 
-      default:
-        return day;
-    }
-  };
 
   const series = [
     {
