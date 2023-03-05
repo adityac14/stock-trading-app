@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import finnHub from "../apis/finnHub";
 import { StockChart } from "../components/StockChart";
+import { StockData } from "../components/StockData";
 
 const formatData = (data) => {
   return data.t.map((element, index) => {
@@ -19,67 +20,62 @@ export const StockDetailPage = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const date = new Date();
-      const currentTimeSeconds = Math.floor(date.getTime() / 1000)
-      let oneDayAgo;
-
-      if (date.getDate() === 6) {
-        oneDayAgo = currentTimeSeconds - 2 * 24 * 60 * 60;
-      } else if (date.getDate() === 0) {
-        oneDayAgo = currentTimeSeconds - 3 * 24 * 60 * 60;
+      const date = new Date()
+      const currentTime = Math.floor(date.getTime() / 1000)
+      let oneDay;
+      if (date.getDay() === 6) {
+        oneDay = currentTime - 2 * 24 * 60 * 60;
+      } else if (date.getDay() === 0) {
+        oneDay = currentTime - 3 * 24 * 60 * 60;
       } else {
-        oneDayAgo = currentTimeSeconds - 24 * 60 * 60;
+        oneDay = currentTime - 24 * 60 * 60;
       }
-
-      const oneWeekAgo = currentTimeSeconds - 7 * 24 * 60 * 60
-      const oneYearAgo = currentTimeSeconds - 365 * 24 * 60 * 60
+      const oneWeek = currentTime - 7 * 24 * 60 * 60
+      const oneYear = currentTime - 365 * 24 * 60 * 60
 
       try {
-        const responses = await Promise.all([
-          finnHub.get("/stock/candle", {
-            params: {
-              symbol,
-              from: oneDayAgo,
-              to: currentTimeSeconds,
-              resolution: 30,
-            },
-          }),
-          finnHub.get("/stock/candle", {
-            params: {
-              symbol,
-              from: oneWeekAgo,
-              to: currentTimeSeconds,
-              resolution: 60,
-            },
-          }),
-          finnHub.get("/stock/candle", {
-            params: {
-              symbol,
-              from: oneYearAgo,
-              to: currentTimeSeconds,
-              resolution: "W",
-            },
-          }),
-        ]);
-        console.log(responses);
+        const responses = await Promise.all([finnHub.get("/stock/candle", {
+          params: {
+            symbol,
+            from: oneDay,
+            to: currentTime,
+            resolution: 30
+          }
+        }), finnHub.get("/stock/candle", {
+          params: {
+            symbol,
+            from: oneWeek,
+            to: currentTime,
+            resolution: 60
+          }
+        }), finnHub.get("/stock/candle", {
+          params: {
+            symbol,
+            from: oneYear,
+            to: currentTime,
+            resolution: "W"
+          }
+        })])
+        console.log(responses)
 
         setChartData({
           day: formatData(responses[0].data),
           week: formatData(responses[1].data),
-          year: formatData(responses[2].data),
-        });
+          year: formatData(responses[2].data)
+        })
       } catch (err) {
-        console.log(err);
+        console.log(err)
       }
-    };
-    fetchData();
-  }, [symbol]);
+    }
+    fetchData()
+  }, [symbol])
 
   // chartData && = if chartData is not null then render out this data
   // if it is null it will render nothing, basically an if statement
   return <div>{chartData && (
     <div>
         <StockChart chartData={chartData} symbol={symbol}/>
+        <StockData symbol={symbol}/>
         
     </div>
   )}
