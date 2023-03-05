@@ -1,13 +1,23 @@
-import { createContext, useState } from "react";
+import { createContext, useState, useEffect } from "react";
 
 export const WatchListContext = createContext();
 
 export const WatchListContextProvider = (props) => {
-  const [stockWatchList, setStockWatchList] = useState([
-    "GOOGL",
-    "MSFT",
-    "AMZN",
-  ]);
+  
+
+  const [stockWatchList, setStockWatchList] = useState(
+    // Checks to see if local storage exists if not it will return null and it will default the original stock array ['GOOGL', 'MSFT', 'AMZN']
+    localStorage.getItem("stockWatchList")?.split(",") || [
+      "GOOGL",
+      "MSFT",
+      "AMZN",
+    ]
+  )
+
+  useEffect(() => {
+    localStorage.setItem("stockWatchList", stockWatchList)
+
+  }, [stockWatchList])
 
   const addStock = (stock) => {
     // Checking to see if this stock already exists in our list. If it doesn't then add the new stock to the list 
